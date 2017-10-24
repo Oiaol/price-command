@@ -1,19 +1,4 @@
-/* PRICE COMMAND, YOU'LL BE ABLE TO SEARCH A COIN ON ALL EXCHANGES
-THIS WILL BE AVAILABLE IN A WEEK'S TIME.
-THE USAGE WILL BE AS SHOWN.. PRICE BTC = BTC FROM THE EXCHANGE WHERE THE VOLUME IS THE MOST SO PROBBALY BITMEX AND THATS THE USE.
-EXCHANGES I AM GOING TO USE:
-BITFINEX - done
-BITTREX - done
-POLONIEX - done
-HITBTC - done
-BINANCE - done
-KRAKEN - DONE
 
-BITSTAMP - done
-YOBIT - done
-LIQUI - done
-ETHERDELTA - done
-*/
 const axios = require("axios");
 const bitfinex = require("./exchanges/bitfinex.js");// ETH BTC USD
 const yobit = require("./exchanges/yobit.js");// DOGE ETH BTC USDT RUR WAVES
