@@ -1,15 +1,15 @@
 
 const axios = require("axios");
-const bitfinex = require("./exchanges/bitfinex.js");// ETH BTC USD
-const yobit = require("./exchanges/yobit.js");// DOGE ETH BTC USDT RUR WAVES
-const binance = require("./exchanges/binance.js");
-const kraken = require("./exchanges/kraken.js");
-const bitstamp = require("./exchanges/bitstamp.js");// USD EUR BTC
-const liqui = require("./exchanges/liqui.js");
-const hitbtc = require("./exchanges/hitbtc.js");
-const bittrex = require("./exchanges/bittrex.js");
-const poloniex = require("./exchanges/poloniex.js");
-const cryptopia = require("./exchanges/cryptopia.js");
+const bitfinex = require("./exchanges/bitfinex.js"),
+      yobit = require("./exchanges/yobit.js"),
+      binance = require("./exchanges/binance.js"),
+      kraken = require("./exchanges/kraken.js"),
+      bitstamp = require("./exchanges/bitstamp.js"),
+      liqui = require("./exchanges/liqui.js"),
+      hitbtc = require("./exchanges/hitbtc.js"),
+      bittrex = require("./exchanges/bittrex.js"),
+      poloniex = require("./exchanges/poloniex.js"),
+      cryptopia = require("./exchanges/cryptopia.js")
 /* CALL A FUNCTION
 AND ACCESS THE ARRAY IN THIS ORDER
 [
