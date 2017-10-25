@@ -13,8 +13,7 @@ const bitfinex = async (coin) => {
 			low = bitfinexData.data[9];
 		return [volume, price, ask, bid, high, low];
 	} catch(error) {
-		console.error;
+		if(error.response.status) return [];
 	}
 };
-
 module.exports = bitfinex;

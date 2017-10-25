@@ -11,7 +11,7 @@ const liqui = async (coin) => {
 		if(ticker.includes(coin)) {
 			const { data: { [coin]: { vol, last, buy, sell, high, low } } } = await axios.get(`https://api.liqui.io/api/3/ticker/${coin}`);
 			return [vol, last, sell, buy, high, low];
-		}
+		} else {return []};
 	} catch(error) {
 		console.log(error);
 	}

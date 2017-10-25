@@ -9,7 +9,8 @@ const bittrex = async (coin) => {
 		if(coin.endsWith("-ETH")) coin = `ETH-${coin.split("-")[0]}`;
 		else if(coin.startsWith("$")) coin = `USDT-${coin.substring(1)}`;
 		else coin = `BTC-${coin}`;
-		if(Object.keys(newMarkets).includes(coin)) return [newMarkets[coin].Volume, newMarkets[coin].Price, newMarkets[coin].Ask, newMarkets[coin].ask, newMarkets[coin].bid, newMarkets[coin].high, newMarkets[coin].low];
+		if(Object.keys(newMarkets).includes(coin)) return [newMarkets[coin].Volume, newMarkets[coin].Price, newMarkets[coin].ask, newMarkets[coin].bid, newMarkets[coin].high, newMarkets[coin].low];
+		else return []
 	} catch(error) {
 		console.log(error);
 	}

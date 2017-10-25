@@ -14,7 +14,7 @@ const bitstamp = async (coin) => {
 			console.log(ex);
 			return false;
 		}
-	}
+	} else { return [] };
 };
 module.exports = bitstamp;
 /* "high": "6119.91",

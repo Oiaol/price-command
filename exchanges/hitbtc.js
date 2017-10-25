@@ -7,6 +7,7 @@ const hitbtc = async (coin) => {
 	try {
 		const url = await axios.get("https://api.hitbtc.com/api/1/public/ticker");
 		if(Object.keys(url.data).includes(coin)) return [url.data[coin].volume_quote, url.data[coin].last, url.data[coin].ask, url.data[coin].bid, url.data[coin].high, url.data[coin].low];
+		else return [];
 	} catch(error) {
 		console.log(error);
 	}

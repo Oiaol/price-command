@@ -10,6 +10,7 @@ const cryptopia = async (coin) => {
 		else if(coin.endsWith("-NZDT") || coin.endsWith("-USDT") || coin.endsWith("-LTC") || coin.endsWith("-DOGE")) coin = coin.split("-").join("/");
 		else coin = `${coin}/BTC`;
         if(tickerObj[coin]) return [tickerObj[coin].volume, tickerObj[coin].price, tickerObj[coin].ask, tickerObj[coin].bid, tickerObj[coin].low];
+        else return []
 	} catch(error) {
 		console.log(error);
 	}
