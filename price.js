@@ -1,93 +1,51 @@
 
-const axios = require("axios");
-const bitfinex = require("./exchanges/bitfinex.js"),
-      yobit = require("./exchanges/yobit.js"),
-      binance = require("./exchanges/binance.js"),
-      kraken = require("./exchanges/kraken.js"),
-      bitstamp = require("./exchanges/bitstamp.js"),
-      liqui = require("./exchanges/liqui.js"),
-      hitbtc = require("./exchanges/hitbtc.js"),
-      bittrex = require("./exchanges/bittrex.js"),
-      poloniex = require("./exchanges/poloniex.js"),
-      cryptopia = require("./exchanges/cryptopia.js")
-/* CALL A FUNCTION
-AND ACCESS THE ARRAY IN THIS ORDER
-[
-    VOLUME,
-    LAST
-    ASK,
-    BID,
-    HIGH,
-    LOW,
-]
-*/
+const coins = {
+	bitfinex: require("./exchanges/bitfinex.js"),
+	yobit: require("./exchanges/yobit.js"),
+	binance: require("./exchanges/binance.js"),
+	kraken: require("./exchanges/kraken.js"),
+	bitstamp: require("./exchanges/bitstamp.js"),
+	liqui: require("./exchanges/liqui.js"),
+	hitbtc: require("./exchanges/hitbtc.js"),
+	bittrex: require("./exchanges/bittrex.js"),
+	poloniex: require("./exchanges/poloniex.js"),
+	cryptopia: require("./exchanges/cryptopia.js")
+};
+
+
 const price = async (coin) => {
 	const testHyphen = new RegExp("\\w{1,}[\\-]\\b", "g");
-	const [isOnBitfinex, isOnYobit, isOnBinance, isOnKraken, isOnBitstamp, isOnLiqui, isOnHitbtc, isOnBittrex, isOnPolo, isOnCryptopia] = await Promise.all([bitfinex(coin), yobit(coin), binance(coin), kraken(coin), bitstamp(coin), liqui(coin), hitbtc(coin), bittrex(coin), poloniex(coin), cryptopia(coin)]);
-	const ticker = coin.split("-")[1];
-	if(isOnBitfinex || isOnYobit || isOnBinance || isOnKraken || isOnBitstamp || isOnLiqui || isOnHitbtc || isOnBittrex || isOnPolo || isOnCryptopia) {
-		if(testHyphen.test(coin)) {
-			const volumeExchanges = {
-				bitfinex: isOnBitfinex ? isOnBitfinex[0] : false,
-				yobit: isOnYobit ? isOnYobit[0] : false,
-				binance: isOnBinance ? isOnBinance[0] : false,
-				kraken: isOnKraken ? isOnKraken[0] : false,
-				bitstamp: isOnBitstamp ? isOnBitstamp[0] : false,
-				liqui: isOnLiqui ? isOnLiqui[0] : false,
-				hitbtc: isOnHitbtc ? isOnHitbtc[0] : false,
-				bittrex: isOnBittrex ? isOnBittrex[0] : false,
-				polo: isOnPolo ? isOnPolo[0] : false,
-				cryptopia: isOnCryptopia ? isOnCryptopia[0] : false
+	let tickerVol = coin.split("-")[1] || false;
+	const onExchanges = await Promise.all(Object.values(coins).map(fn => fn(coin)));
+	if(onExchanges.some(value => value)) {
+		if(testHyphen.test(coin)) tickerVol = coin.split("-")[1];
+		else if(coin.startsWith("$")) tickerVol = "USD";
+		else tickerVol = "BTC";
+		const volumeExchanges = {
+				bitfinex: onExchanges[Object.keys(coins).indexOf("bitfinex")][0] || false,
+				yobit: onExchanges[Object.keys(coins).indexOf("yobit")][0] || false,
+				binance: onExchanges[Object.keys(coins).indexOf("binance")][0] || false,
+				kraken: onExchanges[Object.keys(coins).indexOf("kraken")][0] || false,
+				bitstamp: onExchanges[Object.keys(coins).indexOf("bitstamp")][0] || false,
+				liqui: onExchanges[Object.keys(coins).indexOf("liqui")][0] || false,
+				hitbtc: onExchanges[Object.keys(coins).indexOf("hitbtc")][0] || false,
+				bittrex: onExchanges[Object.keys(coins).indexOf("bittrex")][0] || false,
+				polo: onExchanges[Object.keys(coins).indexOf("poloniex")][0] || false,
+				cryptopia: onExchanges[Object.keys(coins).indexOf("cryptopia")][0] || false
+			},
+			max = Object.keys(volumeExchanges).reduce((a, b) => volumeExchanges[a] > volumeExchanges[b] ? a : b),
+			tickerExchanges = {
+				bitfinex: onExchanges[Object.keys(coins).indexOf("bitfinex")],
+				yobit: onExchanges[Object.keys(coins).indexOf("yobit")],
+				binance: onExchanges[Object.keys(coins).indexOf("binance")],
+				kraken: onExchanges[Object.keys(coins).indexOf("kraken")],
+				bitstamp: onExchanges[Object.keys(coins).indexOf("bitstamp")],
+				liqui: onExchanges[Object.keys(coins).indexOf("liqui")],
+				hitbtc: onExchanges[Object.keys(coins).indexOf("hitbtc")],
+				bittrex: onExchanges[Object.keys(coins).indexOf("bittrex")],
+				polo: onExchanges[Object.keys(coins).indexOf("poloniex")],
+				cryptopia: onExchanges[Object.keys(coins).indexOf("cryptopia")]
 			};
-			const max = Object.keys(volumeExchanges).reduce((a, b) => volumeExchanges[a] > volumeExchanges[b] ? a : b);
-			if(typeof max === "undefined") return;
-			console.log(max);
-			const tickerExchanges = {
-				bitfinex: isOnBitfinex ? isOnBitfinex : false,
-				yobit: isOnYobit ? isOnYobit : false,
-				binance: isOnBinance ? isOnBinance : false,
-				kraken: isOnKraken ? isOnKraken : false,
-				bitstamp: isOnBitstamp ? isOnBitstamp : false,
-				liqui: isOnLiqui ? isOnLiqui : false,
-				hitbtc: isOnHitbtc ? isOnHitbtc : false,
-				bittrex: isOnBittrex ? isOnBittrex : false,
-				polo: isOnPolo ? isOnPolo : false,
-				cryptopia: isOnCryptopia ? isOnCryptopia : false
-			};
-			console.log(`This information is from ${max} ${volumeExchanges[max]}\n last: ${tickerExchanges[max][1]}\nask price: ${tickerExchanges[max][2]}\nbid price: ${tickerExchanges[max][3]}\nhigh price: ${tickerExchanges[max][4]}\nlow pirce: ${tickerExchanges[max][5]}`);
-		} else {
-			const volumeExchanges = {
-				bitfinex: isOnBitfinex ? isOnBitfinex[0] : false,
-				yobit: isOnYobit ? isOnYobit[0] : false,
-				binance: isOnBinance ? isOnBinance[0] : false,
-				kraken: isOnKraken ? isOnKraken[0] : false,
-				bitstamp: isOnBitstamp ? isOnBitstamp[0] : false,
-				liqui: isOnLiqui ? isOnLiqui[0] : false,
-				hitbtc: isOnHitbtc ? isOnHitbtc[0] : false,
-				bittrex: isOnBittrex ? isOnBittrex[0] : false,
-				polo: isOnPolo ? isOnPolo[0] : false,
-				cryptopia: isOnCryptopia ? isOnCryptopia[0] : false
-			};
-			const max = Object.keys(volumeExchanges).reduce((a, b) => volumeExchanges[a] > volumeExchanges[b] ? a : b);
-			if(typeof max === "undefined") return;
-			console.log(max);
-			const tickerExchanges = {
-				bitfinex: isOnBitfinex ? isOnBitfinex : false,
-				yobit: isOnYobit ? isOnYobit : false,
-				binance: isOnBinance ? isOnBinance : false,
-				kraken: isOnKraken ? isOnKraken : false,
-				bitstamp: isOnBitstamp ? isOnBitstamp : false,
-				liqui: isOnLiqui ? isOnLiqui : false,
-				hitbtc: isOnHitbtc ? isOnHitbtc : false,
-				bittrex: isOnBittrex ? isOnBittrex : false,
-				polo: isOnPolo ? isOnPolo : false,
-				cryptopia: isOnCryptopia ? isOnCryptopia : false
-			};
-			console.log(`This information is from ${max} ${volumeExchanges[max]}\n last: ${tickerExchanges[max][1]}\nask price: ${tickerExchanges[max][2]}\nbid price: ${tickerExchanges[max][3]}\nhigh price: ${tickerExchanges[max][4]}\nlow pirce: ${tickerExchanges[max][5]}`);
-		}
+		console.log(`**Ticker:** ${coin}\n**Volume in ${tickerVol}:** ${parseFloat(volumeExchanges[max]).toLocaleString()}\n**Last Price:** ${tickerExchanges[max][1]}\n**Ask Price:** ${tickerExchanges[max][2]}\n**Bid Price:** ${tickerExchanges[max][3]}\n**High Price:** ${tickerExchanges[max][4] || false}\n**Low Price:** ${tickerExchanges[max][5] || false}`);
 	}
 };
-async function main() {
-	console.log(await price("ETH"));
-}
-main();
